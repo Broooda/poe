@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  root 'first_tasks#data'
+  get '/data' => 'first_tasks#data'
+  post '/calculation' => 'first_tasks#calculation'
+  get '/result' => 'first_tasks#result'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
