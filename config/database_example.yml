@@ -1,0 +1,17 @@
+default: &default
+  adapter: postgresql
+  pool: 5
+  timeout: 5000
+  username: username
+  password:
+
+development:
+  <<: *default
+  database: poe_development
+test:
+  <<: *default
+  database: poe_test
+
+production:
+  <<: *default
+  database: poe_production
