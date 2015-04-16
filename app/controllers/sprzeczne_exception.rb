@@ -1,0 +1,3 @@
+class OptymalneException < StandardError
+end
+

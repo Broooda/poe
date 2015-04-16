@@ -1,0 +1,3 @@
+class NieskonczenieException < StandardError
+end
+

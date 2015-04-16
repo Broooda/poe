@@ -1,1 +1,29 @@
-result.haml
+=render 'calc'
+
+%hr
+%hr
+%center
+  %h3
+    =flash[:alert]
+
+  =@cb_array_x[0]
+  \=
+  =@time_array[0]
+  %br
+  =@cb_array_x[1]
+  \=
+  =@time_array[1]
+  %br
+  =@cb_array_x[2]
+  \=
+  =@time_array[2]
+
+  %br
+  -zmienna = 0
+  Minimum funkcji celu z0 = 
+  =@zmienna
+  Zadanie pierwotne maksimum, funkcji celu
+  = -@zmienna
+%br
+współczynniki optymalności:
+=@result.inspect
