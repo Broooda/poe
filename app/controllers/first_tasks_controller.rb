@@ -1,23 +1,8 @@
 class FirstTasksController < ApplicationController
-  def data
-    @x1 =2
-    @x2 =1
-    @x3 =1
-    @y1 =1
-    @y2 =1
-    @y3 =2
-    @z1 =2
-    @z2 =2
-    @z3 =2
-    @a1 =2400
-    @a2 =4800
-    @a3 =7200
-    @gain1 =5
-    @gain2 =3
-    @gain3 =7
-  end
+  def data; end
 
   def calculation
+    puts params
     @params = params
     hash = Simplex.uzupelnij(params)
     @base_matrix = hash[:base]
@@ -25,7 +10,7 @@ class FirstTasksController < ApplicationController
     @time_array = hash[:time]
     @result = [0,0,0,0,0,0]
     @cb_array = [0,0,0]
-    @cb_array_x = ['x3','x4','x5']
+    @cb_array_x = ['x4','x5','x6']
 
     (0..@base_matrix[0].size-1).each do |j|
       (0..@base_matrix.size-1).each do |i|
@@ -52,14 +37,13 @@ class FirstTasksController < ApplicationController
           end
           return render :result
         end
-        # zostawiam 1 na srodku
+
         dzielnik = @base_matrix[wyjscia_y][wyjscia_x]
         (0..@base_matrix[0].size-1).each do |i|
           @base_matrix[wyjscia_y][i] = @base_matrix[wyjscia_y][i] / dzielnik
         end
           @time_array[wyjscia_y] = @time_array[wyjscia_y] / dzielnik
 
-        # robie z pozostałych 0
         (0..@base_matrix.size-1).each do |i|
           if i != wyjscia_y
             wsp = @base_matrix[i][wyjscia_x]/@base_matrix[wyjscia_y][wyjscia_x]
@@ -74,7 +58,8 @@ class FirstTasksController < ApplicationController
           @result[j] = @result[j] - @base_matrix[wyjscia_y][j] * wsp
         end
 
-
+        puts "h"
+        puts "x#{wyjscia_x+1}"
         @cb_array[wyjscia_y] = @gain_array[wyjscia_x]
         @cb_array_x[wyjscia_y] = "x#{wyjscia_x+1}"
       end
