@@ -2,7 +2,6 @@ class FirstTasksController < ApplicationController
   def data; end
 
   def calculation
-    puts params
     @params = params
     hash = Simplex.uzupelnij(params)
     @base_matrix = hash[:base]
@@ -11,6 +10,7 @@ class FirstTasksController < ApplicationController
     @result = [0,0,0,0,0,0]
     @cb_array = [0,0,0]
     @cb_array_x = ['x4','x5','x6']
+    przejscie = 1
 
     (0..@base_matrix[0].size-1).each do |j|
       (0..@base_matrix.size-1).each do |i|
@@ -18,6 +18,22 @@ class FirstTasksController < ApplicationController
       end
        @result[j] = @result[j] - @gain_array[j]
     end
+
+    puts ''
+    puts ''
+    puts 0
+    puts 'wspolczynniki'
+    puts @base_matrix[0].inspect
+    puts @base_matrix[1].inspect
+    puts @base_matrix[2].inspect
+    puts @result.inspect
+    puts ''
+    puts 'Baza:'
+    puts @cb_array_x.inspect
+    puts 'cb:'
+    puts @cb_array.inspect
+    puts 'b'
+    puts @time_array.inspect
 
     flag = true
       while flag do
@@ -32,6 +48,25 @@ class FirstTasksController < ApplicationController
             (0..@cb_array.size-1).each do |i|
               @zmienna += @cb_array[i] * @time_array[i]
             end
+
+            puts ''
+            puts ''
+            puts przejscie
+            puts 'wspolczynniki'
+            puts @base_matrix[0].inspect
+            puts @base_matrix[1].inspect
+            puts @base_matrix[2].inspect
+            puts @result.inspect
+            puts ''
+            puts 'Baza:'
+            puts @cb_array_x.inspect
+            puts 'cb:'
+            puts @cb_array.inspect
+            puts 'b'
+            puts @time_array.inspect
+            przejscie+=1
+            puts 'rozwiazanie'
+            puts @zmienna
           else
             flash[:alert] = ' rozwiązanie sprzeczne '
           end
@@ -57,11 +92,25 @@ class FirstTasksController < ApplicationController
         (0..@base_matrix[0].size-1).each do |j|
           @result[j] = @result[j] - @base_matrix[wyjscia_y][j] * wsp
         end
-
-        puts "h"
-        puts "x#{wyjscia_x+1}"
         @cb_array[wyjscia_y] = @gain_array[wyjscia_x]
         @cb_array_x[wyjscia_y] = "x#{wyjscia_x+1}"
+
+        puts ''
+        puts ''
+        puts przejscie
+        puts 'wspolczynniki'
+        puts @base_matrix[0].inspect
+        puts @base_matrix[1].inspect
+        puts @base_matrix[2].inspect
+        puts @result.inspect
+        puts ''
+        puts 'Baza:'
+        puts @cb_array_x.inspect
+        puts 'cb:'
+        puts @cb_array.inspect
+        puts 'b'
+        puts @time_array.inspect
+        przejscie+=1
       end
 
     render :result

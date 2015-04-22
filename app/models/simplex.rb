@@ -42,19 +42,13 @@ class Simplex < ActiveRecord::Base
   end
 
   def self.kryterium_wyjscia(result, cb_array,base_matrix,gain_array)
-
     min_index_x = Simplex.find_biggest_greater_than_zero(result)
-
     return [nil, 1] if min_index_x.nil?
-
-    # rozwiazanie prawe
     temporary = [0,0,0]
-
     (0..base_matrix.size-1).each do |j|
       temporary[j] = @time_array[j] / base_matrix[j][min_index_x] if base_matrix[j][min_index_x] != 0
     end
     min_index_y =  Simplex.find_smallest_greater_than_zero(temporary)
-
     return [1, nil] if min_index_x.nil?
     return [min_index_x, min_index_y]
   end

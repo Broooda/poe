@@ -1,0 +1,16 @@
+.container-fluid
+  %center
+    Zadanie drugie - metoda simplex
+  %hr
+  %center
+    =form_tag(calculation_path, method: :post) do
+      .row
+        z=
+        =number_field_tag :x1, params[:x1], step: '1', class: 'form-control'
+        =number_field_tag :x2, params[:x1], step: '1', class: 'form-control'
+        =number_field_tag :x3, params[:x1], step: '1', class: 'form-control'
+        =number_field_tag :x4, params[:x1], step: '1', class: 'form-control'
+        =number_field_tag :x5, params[:x1], step: '1', class: 'form-control'
+
+    %br
+      =button_tag 'Dalej', class: "btn btn-primary"
