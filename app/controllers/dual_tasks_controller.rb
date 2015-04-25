@@ -4,16 +4,9 @@ class DualTasksController < ApplicationController
   def calculation
     @params = params
     hash = DualSimplex.uzupelnij(params)
-    @z = []
-    @first = [[],[]]
-    @second = [[],[]]
-    @third = [[],[]]
-
-    @z = hash[:z]
-    @first = hash[:first]
-    @second = hash[:second]
-    @third = hash[:third]
-    binding.pry
+    @sympleks_tab=[[],[],[],[],[],[],[]]
+    @sympleks_tab=hash[:sympleks_tab]
+    #binding.pry
     render :result
   end
 
