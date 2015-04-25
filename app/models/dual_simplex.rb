@@ -89,7 +89,7 @@ class DualSimplex < ActiveRecord::Base
 
     return {sympleks_tab: sympleks_tab}
   end
-  #index_of_min_xb_less_than_zero
+  #index_of_min_xb_less_than_zero   PION
   def self.find_exit_criteria(sympleks_tab)
     min=0.0
     index=nil
@@ -102,7 +102,7 @@ class DualSimplex < ActiveRecord::Base
     return index
   end
 
-  #index_of_max_zj_minus_cj_less_than_zero
+  #index_of_max_zj_minus_cj_less_than_zero  POZIOM
   def self.find_enter_criteria(sympleks_tab)
     max=-999.0
     index=nil
@@ -115,18 +115,34 @@ class DualSimplex < ActiveRecord::Base
     return index
   end
 
-  def self.tranformate_tab(sympleks_tab)
-    #
-    # czeka dodac !!
-    #
-    #
-    #
+  def self.transformation_to_one_in_cell(sympleks_tab)
+    @x=find_enter_criteria(sympleks_tab)
+    @y=find_exit_criteria(sympleks_tab)
+   
+   sympleks_tab[@y][0]=sympleks_tab[0][@x]
+   sympleks_tab[@y][1]=sympleks_tab[1][@x]
+
+    divider=sympleks_tab[@y][@x]
+    (2..10).each do |j|
+        sympleks_tab[@y][j]=sympleks_tab[@y][j]/divider
+    end
+  end
+
+  def self.transformation_other_to_zero(sympleks_tab)
+    #x=find_enter_criteria(sympleks_tab)
+    #y=find_exit_criteria(sympleks_tab)
+    (2..4).each do |i|
+        multiplier=(sympleks_tab[i][@x])*(-1)
+         (2..10).each do |j|
+             sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[@y][j]*multiplier) if i!=@y
+         end
+    end
   end
 
 #brak testow
   def self.calculate_zj(sympleks_tab)
     (3..10).each do |i|
-        result=nil
+        result=0.0
         (2..4).each do |j|
             result+=sympleks_tab[0][j]*sympleks_tab[i][j]
         end
@@ -137,21 +153,33 @@ class DualSimplex < ActiveRecord::Base
 #brak testow
   def self.calculate_zj_minus_cj(sympleks_tab)
     (3..10).each do |j|
-        sympleks_tab[6][j]=sympleks_tab[5][j]-sympleks_tab[0][j]
+        sympleks_tab[6][j]= sympleks_tab[5][j]-sympleks_tab[0][j]
     end
   end
 
 #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
-        sympleks_tab[6][j] >= 0? true : return false
+        return false if !sympleks_tab[6][j] >= 0
     end
+    true
   end
 
 #brak testow
   def self.check_if_feasible(sympleks_tab)
     (2..4).each do |j|
-        sympleks_tab[j][2] >= 0? true : return false
+       return false if !sympleks_tab[j][2] >= 0
     end
   end
+  true
+end
+
+def self.all_in(sympleks_tab)
+  # if !check_if_optimum(sympleks_tab) && !check_if_feasible(sympleks_tab)
+  #   binding.pry
+  #   transformation_to_one_in_cell(sympleks_tab)
+  #   transformation_other_to_zero(sympleks_tab)
+  #   calculate_zj(sympleks_tab)
+  #   calculate_zj_minus_cj(sympleks_tab)
+  # end
 end
