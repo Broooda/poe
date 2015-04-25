@@ -6,7 +6,7 @@ gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
 
 #moje
-gem 'pg'
+gem 'sqlite3'
 gem 'haml'
 gem 'unicorn'
 

@@ -13,6 +13,7 @@ class DualTasksController < ApplicationController
     @first = hash[:first]
     @second = hash[:second]
     @third = hash[:third]
+    binding.pry
     render :result
   end
 
