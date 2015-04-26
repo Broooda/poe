@@ -10,7 +10,7 @@ Udało się?
       -step.each do |row|
         %tr{style: "text-align: center;"}
           -row.each do |elem|
-            %td
+            %td{style: "width: 100px"}
               -if elem.to_f.round(2) == 0
                 =elem
               -else
