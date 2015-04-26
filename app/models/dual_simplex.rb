@@ -108,7 +108,7 @@ class DualSimplex < ActiveRecord::Base
     min = 999.0
     index = nil
     (3..10).each do |j|
-        if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs!=0.0
+        if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && sympleks_tab[6][j] != 0.0 && sympleks_tab[find_exit_criteria(sympleks_tab)][j] != 0.0
             min = (sympleks_tab[6][j] / sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs
             index = j
         end
@@ -118,7 +118,9 @@ class DualSimplex < ActiveRecord::Base
 
   def self.transformation_to_one_in_cell(sympleks_tab)
     @x=find_enter_criteria(sympleks_tab)
+    puts 'x: #{@x}'
     @y=find_exit_criteria(sympleks_tab)
+    puts 'y: #{@y}'
    
    sympleks_tab[@y][0]=sympleks_tab[0][@x]
    sympleks_tab[@y][1]=sympleks_tab[1][@x]
@@ -165,7 +167,7 @@ class DualSimplex < ActiveRecord::Base
   #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
-        return false if sympleks_tab[6][j] > 0.0
+        return false if sympleks_tab[6][j] < 0.0
     end
     true
   end
