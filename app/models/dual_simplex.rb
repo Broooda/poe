@@ -6,11 +6,11 @@ class DualSimplex < ActiveRecord::Base
     sympleks_tab[0][0]=''
     sympleks_tab[0][1]=''
     sympleks_tab[0][2]='cj'
-    sympleks_tab[0][3]=-params[:zx1].to_f
-    sympleks_tab[0][4]=-params[:zx2].to_f
-    sympleks_tab[0][5]=-params[:zx3].to_f
-    sympleks_tab[0][6]=-params[:zx4].to_f
-    sympleks_tab[0][7]=-params[:zx5].to_f
+    sympleks_tab[0][3]=params[:zx1].to_f
+    sympleks_tab[0][4]=params[:zx2].to_f
+    sympleks_tab[0][5]=params[:zx3].to_f
+    sympleks_tab[0][6]=params[:zx4].to_f
+    sympleks_tab[0][7]=params[:zx5].to_f
     sympleks_tab[0][8]=0.0
     sympleks_tab[0][9]=0.0
     sympleks_tab[0][10]=0.0
@@ -78,38 +78,39 @@ class DualSimplex < ActiveRecord::Base
     sympleks_tab[6][0]=''
     sympleks_tab[6][1]=''
     sympleks_tab[6][2]='zj-cj'
-    sympleks_tab[6][3]=params[:zx1].to_f
-    sympleks_tab[6][4]=params[:zx2].to_f
-    sympleks_tab[6][5]=params[:zx3].to_f
-    sympleks_tab[6][6]=params[:zx4].to_f
-    sympleks_tab[6][7]=params[:zx5].to_f
+    sympleks_tab[6][3]=-params[:zx1].to_f
+    sympleks_tab[6][4]=-params[:zx2].to_f
+    sympleks_tab[6][5]=-params[:zx3].to_f
+    sympleks_tab[6][6]=-params[:zx4].to_f
+    sympleks_tab[6][7]=-params[:zx5].to_f
     sympleks_tab[6][8]=0.0
     sympleks_tab[6][9]=0.0
     sympleks_tab[6][10]=0.0
 
     return {sympleks_tab: sympleks_tab}
   end
-  #index_of_min_xb_less_than_zero   PION
+
+  #index_of_min_xb_less_than_zero   patrzymy na PION
   def self.find_exit_criteria(sympleks_tab)
-    min=0.0
-    index=nil
+    min = 999.0
+    index = nil
     (2..4).each do |j|
-        if sympleks_tab[j][2]<min
-            min=sympleks_tab[2][j]
-            index=j
+        if sympleks_tab[j][2] < min
+            min = sympleks_tab[2][j]
+            index = j
         end
     end
     return index
   end
 
-  #index_of_max_zj_minus_cj_less_than_zero  POZIOM
+  #index_of_max_zj_minus_cj_less_than_zero patrzymy na POZIOM
   def self.find_enter_criteria(sympleks_tab)
-    max=-999.0
-    index=nil
+    min = 999.0
+    index = nil
     (3..10).each do |j|
-        if sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]>max && sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]<0
-            max=sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]
-            index=j
+        if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs!=0.0
+            min = (sympleks_tab[6][j] / sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs
+            index = j
         end
     end
     return index
@@ -126,6 +127,7 @@ class DualSimplex < ActiveRecord::Base
     (2..10).each do |j|
         sympleks_tab[@y][j]=sympleks_tab[@y][j]/divider
     end
+    return sympleks_tab
   end
 
   def self.transformation_other_to_zero(sympleks_tab)
@@ -137,6 +139,7 @@ class DualSimplex < ActiveRecord::Base
              sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[@y][j]*multiplier) if i!=@y
          end
     end
+    return sympleks_tab
   end
 
 #brak testow
@@ -144,10 +147,11 @@ class DualSimplex < ActiveRecord::Base
     (3..10).each do |i|
         result=0.0
         (2..4).each do |j|
-            result+=sympleks_tab[0][j]*sympleks_tab[i][j]
+            result=result+sympleks_tab[j][0]*sympleks_tab[j][i]
         end
         sympleks_tab[5][i]=result
     end
+    return sympleks_tab
   end
 
 #brak testow
@@ -155,31 +159,42 @@ class DualSimplex < ActiveRecord::Base
     (3..10).each do |j|
         sympleks_tab[6][j]= sympleks_tab[5][j]-sympleks_tab[0][j]
     end
+    return sympleks_tab
   end
 
 #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
-        return false if !sympleks_tab[6][j] >= 0
+        return false if sympleks_tab[6][j] > 0.0
     end
-    true
+  true
   end
 
 #brak testow
   def self.check_if_feasible(sympleks_tab)
     (2..4).each do |j|
-       return false if !sympleks_tab[j][2] >= 0
+       return false if sympleks_tab[j][2] < 0.0
     end
-  end
   true
-end
+  end
 
-def self.all_in(sympleks_tab)
-  # if !check_if_optimum(sympleks_tab) && !check_if_feasible(sympleks_tab)
-  #   binding.pry
-  #   transformation_to_one_in_cell(sympleks_tab)
-  #   transformation_other_to_zero(sympleks_tab)
-  #   calculate_zj(sympleks_tab)
-  #   calculate_zj_minus_cj(sympleks_tab)
-  # end
+
+  def self.all_in(sympleks_tab)
+    # puts check_if_optimum(sympleks_tab)
+    # puts'--------'
+    # puts check_if_feasible(sympleks_tab)
+    # puts 'haha'
+    # puts !(check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab))
+    while !(check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)) do 
+      #binding.pry
+      transformation_to_one_in_cell(sympleks_tab)
+      transformation_other_to_zero(sympleks_tab)
+      calculate_zj(sympleks_tab)
+      calculate_zj_minus_cj(sympleks_tab)
+      puts 'petla'
+    end
+    #binding.pry
+    return sympleks_tab
+  end
+
 end

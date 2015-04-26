@@ -12,7 +12,7 @@ class DualTasksController < ApplicationController
     # puts @sympleks_tab.inspect
     # DualSimplex.transformation_other_to_zero(@sympleks_tab)
     # puts @sympleks_tab.inspect
-    DualSimplex.all_in(@sympleks_tab)
+    @sympleks_tab=DualSimplex.all_in(@sympleks_tab)
     render :result
   end
 
