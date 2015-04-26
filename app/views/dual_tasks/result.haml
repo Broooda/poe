@@ -11,6 +11,10 @@ Udało się?
         %tr{style: "text-align: center;"}
           -row.each do |elem|
             %td
-              =elem.to_f.round(2)
+              -if elem.to_f.round(2) == 0
+                =elem
+              -else
+                =elem.to_f.round(2)
+            
       %br
     %hr
