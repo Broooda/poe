@@ -3,8 +3,20 @@
 Udało się?
 =@success
 %br
-%br
 %center
+  Tablica początkowa: 
+  %table{border: 1, width: '90%'}
+    -@start_tab.each do |row|
+      %tr{style: "text-align: center;"}
+        -row.each do |elem|
+          %td{style: "width: 100px"}
+            -if elem.to_f.round(2) == 0
+              =elem
+            -else
+              =elem.to_f.round(2)
+            
+  %br
+  Krok po kroku: 
   -@step_by_step.each do |step|
     %table{border: 1, width: '90%'}
       -step.each do |row|
@@ -15,6 +27,6 @@ Udało się?
                 =elem
               -else
                 =elem.to_f.round(2)
+    %br
             
-      %br
-    %hr
+  %br

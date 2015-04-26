@@ -6,7 +6,7 @@ class DualTasksController < ApplicationController
     hash = DualSimplex.uzupelnij(params)
     @sympleks_tab=[[],[],[],[],[],[],[]]
     @sympleks_tab=hash[:sympleks_tab]
-    
+    @start_tab = hash[:sympleks_tab]
     # puts @sympleks_tab.inspect
     # DualSimplex.transformation_to_one_in_cell(@sympleks_tab)
     # puts @sympleks_tab.inspect
