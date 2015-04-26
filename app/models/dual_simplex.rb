@@ -96,7 +96,7 @@ class DualSimplex < ActiveRecord::Base
     index = nil
     (2..4).each do |j|
         if sympleks_tab[j][2] < min
-            min = sympleks_tab[2][j]
+            min = sympleks_tab[j][2]
             index = j
         end
     end
@@ -109,42 +109,42 @@ class DualSimplex < ActiveRecord::Base
     index = nil
     (3..10).each do |j|
         if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && sympleks_tab[6][j] != 0.0 && sympleks_tab[find_exit_criteria(sympleks_tab)][j] != 0.0
-            min = (sympleks_tab[6][j] / sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs
-            index = j
+          min = (sympleks_tab[6][j] / sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs
+          index = j
         end
     end
     return index
   end
 
   def self.transformation_to_one_in_cell(sympleks_tab)
-    @x=find_enter_criteria(sympleks_tab)
-    puts "x: #{@x}"
-    @y=find_exit_criteria(sympleks_tab)
-    puts "y: #{@y}"
+    x = find_enter_criteria(sympleks_tab)
+    puts "x: #{x}"
+    y = find_exit_criteria(sympleks_tab)
+    puts "y: #{y}"
    
-   sympleks_tab[@y][0]=sympleks_tab[0][@x]
-   sympleks_tab[@y][1]=sympleks_tab[1][@x]
+    sympleks_tab[y][0]=sympleks_tab[0][x]
+    sympleks_tab[y][1]=sympleks_tab[1][x]
 
-    divider=sympleks_tab[@y][@x]
+    divider=sympleks_tab[y][x]
     (2..10).each do |j|
-        sympleks_tab[@y][j]=sympleks_tab[@y][j]/divider
+      sympleks_tab[y][j]=sympleks_tab[y][j]/divider
     end
-    return sympleks_tab
+    {sympleks_tab: sympleks_tab, x: x, y: y}
   end
 
-  def self.transformation_other_to_zero(sympleks_tab)
+  def self.transformation_other_to_zero(sympleks_tab, x, y)
     #x=find_enter_criteria(sympleks_tab)
     #y=find_exit_criteria(sympleks_tab)
     (2..4).each do |i|
-        multiplier=(sympleks_tab[i][@x])*(-1)
+        multiplier=(sympleks_tab[i][x])*(-1)
          (2..10).each do |j|
-             sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[@y][j]*multiplier) if i!=@y
-         end
+            sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[y][j]*multiplier) if i!=y
+        end
     end
 
-        multiplier=(sympleks_tab[6][@x])*(-1)
+        multiplier=(sympleks_tab[6][x])*(-1)
        (3..10).each do |j|
-          sympleks_tab[6][j]=sympleks_tab[6][j]+(sympleks_tab[@y][j]*multiplier)
+          sympleks_tab[6][j]=sympleks_tab[6][j]+(sympleks_tab[y][j]*multiplier)
        end
 
     return sympleks_tab
@@ -155,7 +155,7 @@ class DualSimplex < ActiveRecord::Base
     (3..10).each do |i|
         result=0.0
         (2..4).each do |j|
-            result=result+sympleks_tab[j][0]*sympleks_tab[j][i]
+          result=result+sympleks_tab[j][0]*sympleks_tab[j][i]
         end
         sympleks_tab[5][i]=result
     end
@@ -165,7 +165,7 @@ class DualSimplex < ActiveRecord::Base
   #brak testow
   def self.calculate_zj_minus_cj(sympleks_tab)
     (3..10).each do |j|
-        sympleks_tab[6][j]= sympleks_tab[5][j]-sympleks_tab[0][j]
+      sympleks_tab[6][j]= sympleks_tab[5][j]-sympleks_tab[0][j]
     end
     return sympleks_tab
   end
@@ -173,7 +173,7 @@ class DualSimplex < ActiveRecord::Base
   #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
-        return false if sympleks_tab[6][j] > 0.0
+      return false if sympleks_tab[6][j] > 0.0
     end
     true
   end
@@ -181,7 +181,7 @@ class DualSimplex < ActiveRecord::Base
   #brak testow
   def self.check_if_feasible(sympleks_tab)
     (2..4).each do |j|
-       return false if sympleks_tab[j][2] < 0.0
+      return false if sympleks_tab[j][2] < 0.0
     end
     true
   end
@@ -189,8 +189,11 @@ class DualSimplex < ActiveRecord::Base
   def self.all_in(sympleks_tab)
     step_by_step = []
     (0..10).each do |c|
-      sympleks_tab = transformation_to_one_in_cell(sympleks_tab)
-      sympleks_tab = transformation_other_to_zero(sympleks_tab)
+      result = transformation_to_one_in_cell(sympleks_tab)
+      x = result[:x]
+      y = result[:y]
+      sympleks_tab = result[:sympleks_tab]
+      sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
       #sympleks_tab = calculate_zj(sympleks_tab)
       #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone]
