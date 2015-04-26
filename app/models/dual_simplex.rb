@@ -167,7 +167,7 @@ class DualSimplex < ActiveRecord::Base
   #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
-        return false if sympleks_tab[6][j] < 0.0
+        return false if sympleks_tab[6][j] > 0.0
     end
     true
   end
