@@ -118,9 +118,9 @@ class DualSimplex < ActiveRecord::Base
 
   def self.transformation_to_one_in_cell(sympleks_tab)
     @x=find_enter_criteria(sympleks_tab)
-    puts 'x: #{@x}'
+    puts "x: #{@x}"
     @y=find_exit_criteria(sympleks_tab)
-    puts 'y: #{@y}'
+    puts "y: #{@y}"
    
    sympleks_tab[@y][0]=sympleks_tab[0][@x]
    sympleks_tab[@y][1]=sympleks_tab[1][@x]
