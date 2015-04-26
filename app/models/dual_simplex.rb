@@ -180,21 +180,16 @@ class DualSimplex < ActiveRecord::Base
 
 
   def self.all_in(sympleks_tab)
-    # puts check_if_optimum(sympleks_tab)
-    # puts'--------'
-    # puts check_if_feasible(sympleks_tab)
-    # puts 'haha'
-    # puts !(check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab))
     while !(check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)) do 
-      #binding.pry
       transformation_to_one_in_cell(sympleks_tab)
       transformation_other_to_zero(sympleks_tab)
       calculate_zj(sympleks_tab)
       calculate_zj_minus_cj(sympleks_tab)
       puts 'petla'
     end
-    #binding.pry
     return sympleks_tab
   end
 
 end
+
+#!(DualSimplex.check_if_optimum(@sympleks_tab) && DualSimplex.check_if_feasible(@sympleks_tab))
