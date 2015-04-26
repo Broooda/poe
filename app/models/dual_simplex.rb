@@ -141,6 +141,12 @@ class DualSimplex < ActiveRecord::Base
              sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[@y][j]*multiplier) if i!=@y
          end
     end
+
+        multiplier=(sympleks_tab[6][@x])*(-1)
+       (3..10).each do |j|
+          sympleks_tab[6][j]=sympleks_tab[6][j]+(sympleks_tab[@y][j]*multiplier)
+       end
+
     return sympleks_tab
   end
 
@@ -185,8 +191,8 @@ class DualSimplex < ActiveRecord::Base
     (0..10).each do |c|
       sympleks_tab = transformation_to_one_in_cell(sympleks_tab)
       sympleks_tab = transformation_other_to_zero(sympleks_tab)
-      sympleks_tab = calculate_zj(sympleks_tab)
-      sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
+      #sympleks_tab = calculate_zj(sympleks_tab)
+      #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone]
       return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
     end
