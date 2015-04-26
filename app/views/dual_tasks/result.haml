@@ -1,5 +1,16 @@
 =render 'dual_calc'
 
-i tu masz wszystkie zmienne @
+Udało się?
+=@success
 %br
-=@third.inspect
+%br
+%center
+  -@step_by_step.each do |step|
+    %table{border: 1, width: '90%'}
+      -step.each do |row|
+        %tr{style: "text-align: center;"}
+          -row.each do |elem|
+            %td
+              =elem.to_f.round(2)
+      %br
+    %hr

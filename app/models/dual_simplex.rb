@@ -142,7 +142,7 @@ class DualSimplex < ActiveRecord::Base
     return sympleks_tab
   end
 
-#brak testow
+  #brak testow
   def self.calculate_zj(sympleks_tab)
     (3..10).each do |i|
         result=0.0
@@ -154,7 +154,7 @@ class DualSimplex < ActiveRecord::Base
     return sympleks_tab
   end
 
-#brak testow
+  #brak testow
   def self.calculate_zj_minus_cj(sympleks_tab)
     (3..10).each do |j|
         sympleks_tab[6][j]= sympleks_tab[5][j]-sympleks_tab[0][j]
@@ -162,32 +162,33 @@ class DualSimplex < ActiveRecord::Base
     return sympleks_tab
   end
 
-#brak testow
+  #brak testow
   def self.check_if_optimum(sympleks_tab)
     (3..10).each do |j|
         return false if sympleks_tab[6][j] > 0.0
     end
-  true
+    true
   end
 
-#brak testow
+  #brak testow
   def self.check_if_feasible(sympleks_tab)
     (2..4).each do |j|
        return false if sympleks_tab[j][2] < 0.0
     end
-  true
+    true
   end
 
-
   def self.all_in(sympleks_tab)
-    while !(check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)) do 
-      transformation_to_one_in_cell(sympleks_tab)
-      transformation_other_to_zero(sympleks_tab)
-      calculate_zj(sympleks_tab)
-      calculate_zj_minus_cj(sympleks_tab)
-      puts 'petla'
+    step_by_step = []
+    (0..10).each do |c|
+      sympleks_tab = transformation_to_one_in_cell(sympleks_tab)
+      sympleks_tab = transformation_other_to_zero(sympleks_tab)
+      sympleks_tab = calculate_zj(sympleks_tab)
+      sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
+      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone]
+      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
     end
-    return sympleks_tab
+    {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
   end
 
 end

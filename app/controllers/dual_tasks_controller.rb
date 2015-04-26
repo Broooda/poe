@@ -7,16 +7,15 @@ class DualTasksController < ApplicationController
     @sympleks_tab=[[],[],[],[],[],[],[]]
     @sympleks_tab=hash[:sympleks_tab]
     
-			DualSimplex.calculate_zj(@sympleks_tab)
-      DualSimplex.calculate_zj_minus_cj(@sympleks_tab)
-
-    binding.pry
     # puts @sympleks_tab.inspect
     # DualSimplex.transformation_to_one_in_cell(@sympleks_tab)
     # puts @sympleks_tab.inspect
     # DualSimplex.transformation_other_to_zero(@sympleks_tab)
     # puts @sympleks_tab.inspect
-    #@sympleks_tab=DualSimplex.all_in(@sympleks_tab)
+    result_hash = DualSimplex.all_in(@sympleks_tab)
+    @sympleks_tab = result_hash[:sympleks_tab]
+    @step_by_step = result_hash[:step_by_step]
+    @success = result_hash[:success]
     render :result
   end
 
