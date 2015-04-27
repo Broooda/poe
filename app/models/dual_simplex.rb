@@ -108,7 +108,7 @@ class DualSimplex < ActiveRecord::Base
     min = 999.0
     index = nil
     (3..10).each do |j|
-        if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && sympleks_tab[6][j] != 0.0 && sympleks_tab[find_exit_criteria(sympleks_tab)][j] != 0.0
+        if (sympleks_tab[6][j]/sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs < min && sympleks_tab[find_exit_criteria(sympleks_tab)][j]<0
           min = (sympleks_tab[6][j] / sympleks_tab[find_exit_criteria(sympleks_tab)][j]).abs
           index = j
         end
