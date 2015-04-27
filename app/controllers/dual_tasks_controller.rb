@@ -12,10 +12,15 @@ class DualTasksController < ApplicationController
     # puts @sympleks_tab.inspect
     # DualSimplex.transformation_other_to_zero(@sympleks_tab)
     # puts @sympleks_tab.inspect
-    result_hash = DualSimplex.all_in(sympleks_tab)
-    sympleks_tab = result_hash[:sympleks_tab]
-    @step_by_step = result_hash[:step_by_step]
-    @success = result_hash[:success]
+    @success=true
+    begin
+      result_hash = DualSimplex.all_in(sympleks_tab)
+      sympleks_tab = result_hash[:sympleks_tab]
+      @step_by_step = result_hash[:step_by_step]
+      rescue StandardError
+      @success = false
+    end
+      #@success = result_hash[:success]
     render :result
   end
 

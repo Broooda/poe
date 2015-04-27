@@ -113,6 +113,8 @@ class DualSimplex < ActiveRecord::Base
           index = j
         end
     end
+
+    raise StandardError if !index 
     return index
   end
 
@@ -200,6 +202,20 @@ class DualSimplex < ActiveRecord::Base
       return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
+  end
+
+  def self.calculate_result(sympleks_tab)
+    result=0.0
+    (2..4).each do |j|
+      index_y=sympleks_tab[j][1][1].to_f
+      index_y+=2
+      puts "indeks: #{index_y}"
+      result+=sympleks_tab[0][index_y]*sympleks_tab[j][2]
+      puts "wynik posredni: #{result}"
+    end
+    puts "--------------"
+    puts "wynik ostateczny: #{result}"
+    return result
   end
 
 end
