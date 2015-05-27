@@ -1,5 +1,16 @@
 class FourSimplex < ActiveRecord::Base
 
+
+  def self.symbolToTable(what)
+    if what == ">="
+      return -1
+    end
+    if what == "<="
+      return 1
+    end
+    return nill
+  end
+
   def self.uzupelnij(params)
     sympleks_tab=[[],[],[],[],[],[],[], [], [], []]
         
@@ -42,7 +53,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[3][3]=params[:ax3].to_f
     sympleks_tab[3][4]=params[:ax1].to_f
     sympleks_tab[3][5]=params[:ax2].to_f
-    sympleks_tab[3][6]=symbol(params[:a_symbol])
+    sympleks_tab[3][6]=symbolToTable(params[:a_symbol])
     sympleks_tab[3][7]=0.0
     sympleks_tab[3][8]=0.0
     sympleks_tab[3][9]=0.0
@@ -54,7 +65,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[4][4]=params[:bx2].to_f
     sympleks_tab[4][5]=params[:bx1].to_f
     sympleks_tab[4][6]=0.0
-    sympleks_tab[4][7]=symbol(params[:b_symbol])
+    sympleks_tab[4][7]=symbolToTable(params[:b_symbol])
     sympleks_tab[4][8]=0.0
     sympleks_tab[4][9]=0.0
 
@@ -66,7 +77,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[5][5]=params[:cx1].to_f
     sympleks_tab[5][6]=0.0
     sympleks_tab[5][7]=0.0
-    sympleks_tab[5][8]=symbol(params[:c_symbol])
+    sympleks_tab[5][8]=symbolToTable(params[:c_symbol])
     sympleks_tab[5][9]=0.0
 
     sympleks_tab[6][0]=0.0
@@ -78,7 +89,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[6][6]=0.0
     sympleks_tab[6][7]=0.0
     sympleks_tab[6][8]=0.0
-    sympleks_tab[6][9]=symbol(params[:d_symbol])
+    sympleks_tab[6][9]=symbolToTable(params[:d_symbol])
 
     sympleks_tab[7][0]=''
     sympleks_tab[7][1]='delta'
@@ -160,8 +171,7 @@ class FourSimplex < ActiveRecord::Base
         #   raise StandardError
         # end
        raise StandardError if !index 
-       return index
-          
+       return index  
     end
     return index
   end
@@ -171,10 +181,11 @@ class FourSimplex < ActiveRecord::Base
      max = 0.0
      index = nil
      (4..9).each do |i|
-      if sympleks_tab[9][i] > max
-        max = sympleks_tab[9][i]
-        index = i
-    end
+        if sympleks_tab[9][i] > max
+          max = sympleks_tab[9][i]
+          index = i
+        end
+      end
     raise StandardError if !index 
     return index
   end
@@ -202,6 +213,7 @@ class FourSimplex < ActiveRecord::Base
          (3..9).each do |j|
             sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[y][j]*multiplier) if i!=y
         end
+      end
     end
     return sympleks_tab
   end
@@ -253,17 +265,4 @@ class FourSimplex < ActiveRecord::Base
   #   puts "wynik ostateczny: #{result}"
   #   return result
   # end
-
-  def self.symbol(symbol)
-    if symbol == ">="
-      return -1
-    end
-    if symbol == "<="
-      return 1
-    end
-    else
-      return nill
-    end
-  end
-
 end
