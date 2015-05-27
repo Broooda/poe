@@ -3,18 +3,18 @@ class DualTasksController < ApplicationController
 
   def calculation
     @params = params
-    hash = DualSimplex.uzupelnij(params)
-    sympleks_tab=[[],[],[],[],[],[],[]]
+    hash = FourSimplex.uzupelnij(params)
+    sympleks_tab=[[],[],[],[],[],[],[], [], [], []]
     sympleks_tab = hash[:sympleks_tab]
     @start_tab = [hash[:sympleks_tab][0].clone, hash[:sympleks_tab][1].clone,hash[:sympleks_tab][2].clone,hash[:sympleks_tab][3].clone,hash[:sympleks_tab][4].clone,hash[:sympleks_tab][5].clone,hash[:sympleks_tab][6].clone]
     # puts @sympleks_tab.inspect
-    # DualSimplex.transformation_to_one_in_cell(@sympleks_tab)
+    # FourSimplex.transformation_to_one_in_cell(@sympleks_tab)
     # puts @sympleks_tab.inspect
-    # DualSimplex.transformation_other_to_zero(@sympleks_tab)
+    # FourSimplex.transformation_other_to_zero(@sympleks_tab)
     # puts @sympleks_tab.inspect
     @success=true
     begin
-      result_hash = DualSimplex.all_in(sympleks_tab)
+      result_hash = FourSimplex.all_in(sympleks_tab)
       sympleks_tab = result_hash[:sympleks_tab]
       @step_by_step = result_hash[:step_by_step]
       rescue StandardError

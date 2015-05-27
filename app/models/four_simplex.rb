@@ -21,7 +21,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[1][4]=params[:yx1].to_f
     sympleks_tab[1][5]=params[:yx2].to_f
     sympleks_tab[1][6]=0.0
-    sympleks_tab[1][7]=0.
+    sympleks_tab[1][7]=0.0
     sympleks_tab[1][8]=0.0
     sympleks_tab[1][9]=0.0
 
@@ -42,7 +42,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[3][3]=params[:ax3].to_f
     sympleks_tab[3][4]=params[:ax1].to_f
     sympleks_tab[3][5]=params[:ax2].to_f
-    sympleks_tab[3][6]=symbol(paramx[:a_symbol])
+    sympleks_tab[3][6]=symbol(params[:a_symbol])
     sympleks_tab[3][7]=0.0
     sympleks_tab[3][8]=0.0
     sympleks_tab[3][9]=0.0
@@ -54,7 +54,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[4][4]=params[:bx2].to_f
     sympleks_tab[4][5]=params[:bx1].to_f
     sympleks_tab[4][6]=0.0
-    sympleks_tab[4][7]=symbol(paramx[:b_symbol])
+    sympleks_tab[4][7]=symbol(params[:b_symbol])
     sympleks_tab[4][8]=0.0
     sympleks_tab[4][9]=0.0
 
@@ -66,7 +66,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[5][5]=params[:cx1].to_f
     sympleks_tab[5][6]=0.0
     sympleks_tab[5][7]=0.0
-    sympleks_tab[5][8]=symbol(paramx[:c_symbol])
+    sympleks_tab[5][8]=symbol(params[:c_symbol])
     sympleks_tab[5][9]=0.0
 
     sympleks_tab[6][0]=0.0
@@ -78,7 +78,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[6][6]=0.0
     sympleks_tab[6][7]=0.0
     sympleks_tab[6][8]=0.0
-    sympleks_tab[6][9]=symbol(paramx[:d_symbol])
+    sympleks_tab[6][9]=symbol(params[:d_symbol])
 
     sympleks_tab[7][0]=''
     sympleks_tab[7][1]='delta'
@@ -156,9 +156,9 @@ class FourSimplex < ActiveRecord::Base
             min = sympleks_tab[j][2]
             index = j
         end
-        else
-          raise StandardError
-        end
+        # else
+        #   raise StandardError
+        # end
        raise StandardError if !index 
        return index
           
@@ -234,7 +234,7 @@ class FourSimplex < ActiveRecord::Base
       sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
       #sympleks_tab = calculate_zj(sympleks_tab)
       #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
-      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]]
+      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
       return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
