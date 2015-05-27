@@ -5,39 +5,37 @@
   %center
     =form_tag(calculation_path, method: :post) do
       .row
-        z=
         =number_field_tag :zx1, params[:zx1], step: '1', placeholder: 'x1'
         =number_field_tag :zx2, params[:zx2], step: '1', placeholder: 'x2'
-        =number_field_tag :zx3, params[:zx3], step: '1', placeholder: 'x3'
-        =number_field_tag :zx4, params[:zx4], step: '1', placeholder: 'x4'
-        =number_field_tag :zx5, params[:zx5], step: '1', placeholder: 'x5'
-        \-> min
+        =number_field_tag :zx3, params[:zx3], step: '1', placeholder: 'x'
+      %hr
+      .row
+        =number_field_tag :yx1, params[:yx1], step: '1', placeholder: 'x1'
+        =number_field_tag :yx2, params[:yx2], step: '1', placeholder: 'x2'
+        =number_field_tag :yx3, params[:yx3], step: '1', placeholder: 'x'
       %br
       .row
         =number_field_tag :ax1, params[:ax1], step: '1', placeholder: 'x1'
         =number_field_tag :ax2, params[:ax2], step: '1', placeholder: 'x2'
-        =number_field_tag :ax3, params[:ax3], step: '1', placeholder: 'x3'
-        =number_field_tag :ax4, params[:ax4], step: '1', placeholder: 'x4'
-        =number_field_tag :ax5, params[:ax5], step: '1', placeholder: 'x5'
-        >= 
-        =number_field_tag :ay, params[:ay], step: '1', placeholder: 'y'
+        =select_tag :a_symbol, options_for_select([["<=", ">="]]), class: 'form-control'
+        =number_field_tag :ax3, params[:ax3], step: '1', placeholder: 'y'
       %br
       .row
         =number_field_tag :bx1, params[:bx1], step: '1', placeholder: 'x1'
         =number_field_tag :bx2, params[:bx2], step: '1', placeholder: 'x2'
-        =number_field_tag :bx3, params[:bx3], step: '1', placeholder: 'x3'
-        =number_field_tag :bx4, params[:bx4], step: '1', placeholder: 'x4'
-        =number_field_tag :bx5, params[:bx5], step: '1', placeholder: 'x5'
-        >= 
-        =number_field_tag :by, params[:by], step: '1', placeholder: 'y'
+        =select_tag :b_symbol, options_for_select([["<=", ">="]]), class: 'form-control' 
+        =number_field_tag :bx3, params[:bx3], step: '1', placeholder:  'y'
       %br
       .row
         =number_field_tag :cx1, params[:cx1], step: '1', placeholder: 'x1'
         =number_field_tag :cx2, params[:cx2], step: '1', placeholder: 'x2'
-        =number_field_tag :cx3, params[:cx3], step: '1', placeholder: 'x3'
-        =number_field_tag :cx4, params[:cx4], step: '1', placeholder: 'x4'
-        =number_field_tag :cx5, params[:cx5], step: '1', placeholder: 'x5'
-        >= 
-        =number_field_tag :cy, params[:cy], step: '1', placeholder: 'y'
+        =select_tag :c_symbol, options_for_select([["<=", ">="]]), class: 'form-control'
+        =number_field_tag :cx3, params[:cx3], step: '1', placeholder: 'y'
+      %br
+      .row
+        =number_field_tag :dx1, params[:dx1], step: '1', placeholder: 'x1'
+        =number_field_tag :dx2, params[:dx2], step: '1', placeholder: 'x2'
+        =select_tag :d_symbol, options_for_select([["<=", ">="]]), class: 'form-control' 
+        =number_field_tag :dx3, params[:dx3], step: '1', placeholder: 'y'
       %br
         =button_tag 'Dalej', class: "btn btn-primary"
