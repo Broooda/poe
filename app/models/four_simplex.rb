@@ -42,7 +42,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[3][3]=params[:ax3].to_f
     sympleks_tab[3][4]=params[:ax1].to_f
     sympleks_tab[3][5]=params[:ax2].to_f
-    sympleks_tab[3][6]=1.0 lub -1.0 w zaleznosci od znaku
+    sympleks_tab[3][6]=symbol(paramx[:a_symbol])
     sympleks_tab[3][7]=0.0
     sympleks_tab[3][8]=0.0
     sympleks_tab[3][9]=0.0
@@ -54,7 +54,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[4][4]=params[:bx2].to_f
     sympleks_tab[4][5]=params[:bx1].to_f
     sympleks_tab[4][6]=0.0
-    sympleks_tab[4][7]=1.0 lub -1.0 w zaleznosci od znaku
+    sympleks_tab[4][7]=symbol(paramx[:b_symbol])
     sympleks_tab[4][8]=0.0
     sympleks_tab[4][9]=0.0
 
@@ -66,7 +66,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[5][5]=params[:cx1].to_f
     sympleks_tab[5][6]=0.0
     sympleks_tab[5][7]=0.0
-    sympleks_tab[5][8]=1.0 lub -1.0 w zaleznosci od znaku
+    sympleks_tab[5][8]=symbol(paramx[:c_symbol])
     sympleks_tab[5][9]=0.0
 
     sympleks_tab[6][0]=0.0
@@ -78,13 +78,13 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[6][6]=0.0
     sympleks_tab[6][7]=0.0
     sympleks_tab[6][8]=0.0
-    sympleks_tab[6][9]=1.0 lub -1.0 w zaleznosci od znaku
+    sympleks_tab[6][9]=symbol(paramx[:d_symbol])
 
     sympleks_tab[7][0]=''
     sympleks_tab[7][1]='delta'
     sympleks_tab[7][2]='L'
     calculate_l
-    # sympleks_tab[7][3]=POLICZOL()
+    # sympleks_tab[7][3]=POLICZL()
     # sympleks_tab[7][4]=POLICZL()
     # sympleks_tab[7][5]=POLICZL()
     # sympleks_tab[7][6]=0.0
@@ -96,7 +96,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[8][1]='delta'
     sympleks_tab[8][2]='M'
     calculate_m
-    # sympleks_tab[8][3]=POLICZOM()
+    # sympleks_tab[8][3]=POLICZM()
     # sympleks_tab[8][4]=POLICZM()
     # sympleks_tab[8][5]=POLICZM()
     # sympleks_tab[8][6]=0.0
@@ -108,7 +108,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[9][1]='delta'
     sympleks_tab[9][2]='B'
     calculate_b
-    # sympleks_tab[9][3]=POLICZOB()
+    # sympleks_tab[9][3]=POLICZB()
     # sympleks_tab[9][4]=POLICZB()
     # sympleks_tab[9][5]=POLICZB()
     # sympleks_tab[9][6]=0.0
@@ -132,13 +132,7 @@ class FourSimplex < ActiveRecord::Base
   def self.calculate_m()
     (3..9).each do |i|
       sympleks_tab[8][i] = 0.0
-      (3..6).each do |j|    # sympleks_tab[7][3]=POLICZOL()
-    # sympleks_tab[7][4]=POLICZL()
-    # sympleks_tab[7][5]=POLICZL()
-    # sympleks_tab[7][6]=0.0
-    # sympleks_tab[7][7]=0.0
-    # sympleks_tab[7][8]=0.0
-    # sympleks_tab[7][9]=0.0
+      (3..6).each do |j|
         sympleks_tab[8][i] += sympleks_tab[j][i]*sympleks_tab[j][1]
       end
       sympleks_tab[8][i] -= sympleks_tab[1][i]
@@ -212,13 +206,12 @@ class FourSimplex < ActiveRecord::Base
     return sympleks_tab
   end
 
-  # #brak testow
-  # def self.check_if_optimum(sympleks_tab)
-  #   (3..10).each do |j|
-  #     return false if sympleks_tab[6][j] > 0.0
-  #   end
-  #   true
-  # end
+  def self.check_if_optimum(sympleks_tab)
+    (4..9).each do |j|
+      return false if sympleks_tab[9][j] > 0.0
+    end
+    true
+  end
 
   # #brak testow
   # def self.check_if_feasible(sympleks_tab)
@@ -227,7 +220,7 @@ class FourSimplex < ActiveRecord::Base
   #   end
   #   true
   # end
-  
+
   def self.all_in(sympleks_tab)
     step_by_step = []
     calculate_m;
@@ -241,8 +234,8 @@ class FourSimplex < ActiveRecord::Base
       sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
       #sympleks_tab = calculate_zj(sympleks_tab)
       #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
-      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone]
-      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]]
+      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
   end
@@ -260,5 +253,17 @@ class FourSimplex < ActiveRecord::Base
   #   puts "wynik ostateczny: #{result}"
   #   return result
   # end
+
+  def self.symbol(symbol)
+    if symbol == ">="
+      return -1
+    end
+    if symbol == "<="
+      return 1
+    end
+    else
+      return nill
+    end
+  end
 
 end
