@@ -2,13 +2,15 @@ class FourSimplex < ActiveRecord::Base
 
 
   def self.symbolToTable(what)
+    puts "weszlo"
+    puts what
+    puts "wyszlo"
     if what == ">="
+      puts "-1"
       return -1
     end
-    if what == "<="
+    puts "1"
       return 1
-    end
-    return nil
   end
 
   def self.uzupelnij(params)
@@ -169,24 +171,24 @@ class FourSimplex < ActiveRecord::Base
 
   #index_of_min_theta_greater_than_zero   patrzymy na PION
   def self.find_exit_criteria(sympleks_tab, x)
+    puts "-----------------------"
     puts "exit poczatek"
+    puts "x:"
+    puts x
+    puts "-----------------------"
     min = 999.0
     indexExit = nil
     (3..6).each do |j|
       puts "-----------------------"
       puts sympleks_tab[j][3]
       puts "/"
-      puts sympleks_tab[3][x]
+      puts sympleks_tab[j][x]
       puts min
       puts "-----------------------"
-      puts "x:"
-      puts x
-      if sympleks_tab[j][3]/sympleks_tab[3][x] < min && sympleks_tab[j][3]/sympleks_tab[3][x]>0.0 && sympleks_tab[j][3] != 0.0
-        puts "min=" 
-        puts sympleks_tab[j][3]
-        puts "przez"
-        puts sympleks_tab[3][x]
-        min = sympleks_tab[j][3]/sympleks_tab[3][x]
+      if (sympleks_tab[j][3]/sympleks_tab[j][x]).abs < min && (sympleks_tab[j][3]/sympleks_tab[j][x]).abs > 0.0 && sympleks_tab[j][x] > 0.0
+        min = (sympleks_tab[j][3]/sympleks_tab[j][x]).abs
+        puts "zmiana min"
+        puts min
         indexExit = j
         puts "j:"
         puts j
@@ -251,6 +253,14 @@ class FourSimplex < ActiveRecord::Base
     true
   end
 
+  #nie wiem czy taki bo nie ma w wykladach jaki jest 
+  def self.check_if_feasible(sympleks_tab)
+    (4..9).each do |i|
+      #return true if sympleks_tab[8][i]>0 || sympleks_tab[7][i]>0
+    end
+    #false
+  end
+
   def self.all_in(sympleks_tab)
   puts "------------------"
   puts "all in"
@@ -281,10 +291,13 @@ class FourSimplex < ActiveRecord::Base
       #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
     puts "------------------"
-    puts "warunek"
+    puts "warunek opti"
     puts check_if_optimum(sympleks_tab)
     puts "------------------"
-      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
+    puts "warunek feasi"
+    puts check_if_feasible(sympleks_tab)
+    puts "------------------"
+      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
     end
   puts "------------------"
   puts "koniec"

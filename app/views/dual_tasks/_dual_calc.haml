@@ -1,41 +1,41 @@
 .container-fluid
   %center
-    Zadanie trzecie - dualny algorytm simplex
+    Zadanie czwarte 
   %hr
   %center
     =form_tag(calculation_path, method: :post) do
       .row
-        =number_field_tag :zx1, params[:zx1], step: '1', placeholder: 'x1'
-        =number_field_tag :zx2, params[:zx2], step: '1', placeholder: 'x2'
-        =number_field_tag :zx3, params[:zx3], step: '1', placeholder: 'x'
+        =number_field_tag :zx1, params[:zx1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :zx2, params[:zx2], step: '0.5', placeholder: 'x2'
+        =number_field_tag :zx3, params[:zx3], step: '0.5', placeholder: 'x'
       %hr
       .row
-        =number_field_tag :yx1, params[:yx1], step: '1', placeholder: 'x1'
-        =number_field_tag :yx2, params[:yx2], step: '1', placeholder: 'x2'
-        =number_field_tag :yx3, params[:yx3], step: '1', placeholder: 'x'
+        =number_field_tag :yx1, params[:yx1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :yx2, params[:yx2], step: '0.5', placeholder: 'x2'
+        =number_field_tag :yx3, params[:yx3], step: '0.5', placeholder: 'x'
       %br
       .row
-        =number_field_tag :ax1, params[:ax1], step: '1', placeholder: 'x1'
-        =number_field_tag :ax2, params[:ax2], step: '1', placeholder: 'x2'
-        =select_tag :a_symbol, options_for_select([["<=", ">="]])
-        =number_field_tag :ax3, params[:ax3], step: '1', placeholder: 'y'
+        =number_field_tag :ax1, params[:ax1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :ax2, params[:ax2], step: '0.5', placeholder: 'x2'
+        =select_tag :a_symbol, options_for_select([ "<=", ">=" ], "<=")
+        =number_field_tag :ax3, params[:ax3], step: '0.5', placeholder: 'y'
       %br
       .row
-        =number_field_tag :bx1, params[:bx1], step: '1', placeholder: 'x1'
-        =number_field_tag :bx2, params[:bx2], step: '1', placeholder: 'x2'
-        =select_tag :b_symbol, options_for_select([["<=", ">="]])
-        =number_field_tag :bx3, params[:bx3], step: '1', placeholder:  'y'
+        =number_field_tag :bx1, params[:bx1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :bx2, params[:bx2], step: '0.5', placeholder: 'x2'
+        =select_tag :b_symbol, options_for_select([ "<=", ">=" ], "<=")
+        =number_field_tag :bx3, params[:bx3], step: '0.5', placeholder:  'y'
       %br
       .row
-        =number_field_tag :cx1, params[:cx1], step: '1', placeholder: 'x1'
-        =number_field_tag :cx2, params[:cx2], step: '1', placeholder: 'x2'
-        =select_tag :c_symbol, options_for_select([["<=", ">="]])
-        =number_field_tag :cx3, params[:cx3], step: '1', placeholder: 'y'
+        =number_field_tag :cx1, params[:cx1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :cx2, params[:cx2], step: '0.5', placeholder: 'x2'
+        =select_tag :c_symbol, options_for_select([ "<=", ">=" ], "<=")
+        =number_field_tag :cx3, params[:cx3], step: '0.5', placeholder: 'y'
       %br
       .row
-        =number_field_tag :dx1, params[:dx1], step: '1', placeholder: 'x1'
-        =number_field_tag :dx2, params[:dx2], step: '1', placeholder: 'x2'
-        =select_tag :d_symbol, options_for_select([["<=", ">="]])
-        =number_field_tag :dx3, params[:dx3], step: '1', placeholder: 'y'
+        =number_field_tag :dx1, params[:dx1], step: '0.5', placeholder: 'x1'
+        =number_field_tag :dx2, params[:dx2], step: '0.5', placeholder: 'x2'
+        =select_tag :d_symbol, options_for_select([ "<=", ">=" ], "<=")
+        =number_field_tag :dx3, params[:dx3], step: '0.5', placeholder: 'y'
       %br
         =button_tag 'Dalej', class: "btn btn-primary"
