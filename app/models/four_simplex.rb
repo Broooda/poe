@@ -97,37 +97,15 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[7][1]='delta'
     sympleks_tab[7][2]='L'
     calculate_l(sympleks_tab)
-    # sympleks_tab[7][3]=POLICZL()
-    # sympleks_tab[7][4]=POLICZL()
-    # sympleks_tab[7][5]=POLICZL()
-    # sympleks_tab[7][6]=0.0
-    # sympleks_tab[7][7]=0.0
-    # sympleks_tab[7][8]=0.0
-    # sympleks_tab[7][9]=0.0
 
     sympleks_tab[8][0]=''
     sympleks_tab[8][1]='delta'
     sympleks_tab[8][2]='M'
     calculate_m(sympleks_tab)
-    # sympleks_tab[8][3]=POLICZM()
-    # sympleks_tab[8][4]=POLICZM()
-    # sympleks_tab[8][5]=POLICZM()
-    # sympleks_tab[8][6]=0.0
-    # sympleks_tab[8][7]=0.0
-    # sympleks_tab[8][8]=0.0
-    # sympleks_tab[8][9]=0.0
-
     sympleks_tab[9][0]=''
     sympleks_tab[9][1]='delta'
     sympleks_tab[9][2]='B'
     calculate_b(sympleks_tab)
-    # sympleks_tab[9][3]=POLICZB()
-    # sympleks_tab[9][4]=POLICZB()
-    # sympleks_tab[9][5]=POLICZB()
-    # sympleks_tab[9][6]=0.0
-    # sympleks_tab[9][7]=0.0
-    # sympleks_tab[9][8]=0.0
-    # sympleks_tab[9][9]=0.0
 
     return {sympleks_tab: sympleks_tab}
   end
@@ -171,40 +149,21 @@ class FourSimplex < ActiveRecord::Base
 
   #index_of_min_theta_greater_than_zero   patrzymy na PION
   def self.find_exit_criteria(sympleks_tab, x)
-    puts "-----------------------"
-    puts "exit poczatek"
-    puts "x:"
-    puts x
-    puts "-----------------------"
     min = 999.0
     indexExit = nil
     (3..6).each do |j|
-      puts "-----------------------"
-      puts sympleks_tab[j][3]
-      puts "/"
-      puts sympleks_tab[j][x]
-      puts min
-      puts "-----------------------"
       if (sympleks_tab[j][3]/sympleks_tab[j][x]).abs < min && (sympleks_tab[j][3]/sympleks_tab[j][x]).abs > 0.0 && sympleks_tab[j][x] > 0.0
         min = (sympleks_tab[j][3]/sympleks_tab[j][x]).abs
-        puts "zmiana min"
-        puts min
         indexExit = j
         puts "j:"
         puts j
       end
-      # else
-      #   raise StandardError
-      # end
-      puts "exit srodek"
-    end
-    #raise StandardError if !indexExit   
-    return indexExit
+    end  
+    indexExit
   end
 
   #index_of_max_delta_b_greater_than_zero   patrzymy na POZIOM
   def self.find_enter_criteria(sympleks_tab)
-    puts "enter start"
      max = 0.0
      index = nil
      (4..9).each do |i|
@@ -213,17 +172,12 @@ class FourSimplex < ActiveRecord::Base
           index = i
         end
       end
-      puts "enter srodek"
-    raise StandardError if !index 
-    puts "enter koniec"
-    return index
+    index
   end
 
   def self.transformation_to_one_in_cell(sympleks_tab)
     x = find_enter_criteria(sympleks_tab)
-    puts "x: #{x}"
     y = find_exit_criteria(sympleks_tab, x)
-    puts "y: #{y}"
    
     sympleks_tab[y][2] = sympleks_tab[2][x]
     sympleks_tab[y][0] = sympleks_tab[0][x]
@@ -248,74 +202,29 @@ class FourSimplex < ActiveRecord::Base
 
   def self.check_if_optimum(sympleks_tab)
     (4..9).each do |j|
-      #return false if sympleks_tab[9][j] > 0.0
+      return false if sympleks_tab[9][j] > 0.0
     end
     true
   end
 
-  #nie wiem czy taki bo nie ma w wykladach jaki jest 
-  def self.check_if_feasible(sympleks_tab)
-    (4..9).each do |i|
-      #return true if sympleks_tab[8][i]>0 || sympleks_tab[7][i]>0
-    end
-    #false
-  end
 
   def self.all_in(sympleks_tab)
-  puts "------------------"
-  puts "all in"
-  puts "------------------"
+
     step_by_step = []
     (0..9).each do |c|
-    #calculate_m(sympleks_tab)
-    #calculate_l(sympleks_tab)
-    #calculate_b(sympleks_tab)
-    puts "------------------"
-    puts c
-    puts "------------------"
       result = transformation_to_one_in_cell(sympleks_tab)
-    puts "------------------"
-    puts "za transformation_to_one_in_cell"
-    puts result
-    puts "------------------"
+
       x = result[:x]
       y = result[:y]
       sympleks_tab = result[:sympleks_tab]
       sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
       calculate_b(sympleks_tab)
-    puts "------------------"
-    puts "za transformation_other_to_zero"
-    puts sympleks_tab.inspect
-    puts "------------------"
-      #sympleks_tab = calculate_zj(sympleks_tab)
-      #sympleks_tab = calculate_zj_minus_cj(sympleks_tab)
+
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
-    puts "------------------"
-    puts "warunek opti"
-    puts check_if_optimum(sympleks_tab)
-    puts "------------------"
-    puts "warunek feasi"
-    puts check_if_feasible(sympleks_tab)
-    puts "------------------"
-      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+
+      return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
     end
-  puts "------------------"
-  puts "koniec"
-  puts "------------------"
+
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
   end
-
-  # def self.calculate_result(sympleks_tab)
-  #   result=0.0
-  #   (2..4).each do |j|
-  #     index_y=sympleks_tab[j][1][1].to_f
-  #     index_y+=2
-  #     puts "indeks: #{index_y}"
-  #     result+=sympleks_tab[0][index_y]*sympleks_tab[j][2]
-  #     puts "wynik posredni: #{result}"
-  #   end
-  #   puts "--------------"
-  #   puts "wynik ostateczny: #{result}"
-  #   return result
-  # end
 end

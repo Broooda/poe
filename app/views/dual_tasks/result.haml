@@ -1,22 +1,22 @@
 =render 'dual_calc'
 
-/ %h3
-/   -if @success
-/     Wynik:
-/     =@step_by_step.last[2][1]
-/     \=
-/     =@step_by_step.last[2][2]
-/     =@step_by_step.last[3][1]
-/     \=
-/     =@step_by_step.last[3][2]
-/     =@step_by_step.last[4][1]
-/     \=
-/     =@step_by_step.last[4][2]
-/     %br
-/     Wartosc funkcji celu = 
-/     =DualSimplex.calculate_result(@step_by_step.last)
-/   -else
-/     Brak rozwiązania
+%h3
+  -if @success
+    Wynik:
+    =@step_by_step.last[2][1]
+    \=
+    =@step_by_step.last[2][2]
+    =@step_by_step.last[3][1]
+    \=
+    =@step_by_step.last[3][2]
+    =@step_by_step.last[4][1]
+    \=
+    =@step_by_step.last[4][2]
+    %br
+    Wartosc funkcji celu = 
+    wtf
+  -else
+    Brak rozwiązania
 
 %br
 %center
