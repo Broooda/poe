@@ -15,7 +15,7 @@ class DualTasksController < ApplicationController
       rescue StandardError
       @success = false
     end
-    @success = result_hash[:success]
+    # @success = result_hash[:success]
     render :result
   end
 

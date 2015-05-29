@@ -14,7 +14,7 @@
         =number_field_tag :yx2, params[:yx2], step: '0.5', placeholder: 'x2'
         =number_field_tag :yx3, params[:yx3], step: '0.5', placeholder: 'x'
       %br
-        =select_tag :useless, options_for_select([ "max", "min" ], "min")
+        =select_tag :main_symbol, options_for_select([ "max", "min" ], "min")
       %br
       .row
         =number_field_tag :ax1, params[:ax1], step: '0.5', placeholder: 'x1'

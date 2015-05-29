@@ -2,15 +2,10 @@ class FourSimplex < ActiveRecord::Base
 
 
   def self.symbolToTable(what)
-    puts "weszlo"
-    puts what
-    puts "wyszlo"
     if what == ">="
-      puts "-1"
       return -1
     end
-    puts "1"
-      return 1
+    1
   end
 
   def self.uzupelnij(params)
@@ -155,8 +150,6 @@ class FourSimplex < ActiveRecord::Base
       if (sympleks_tab[j][3]/sympleks_tab[j][x]).abs < min && (sympleks_tab[j][3]/sympleks_tab[j][x]).abs > 0.0 && sympleks_tab[j][x] > 0.0
         min = (sympleks_tab[j][3]/sympleks_tab[j][x]).abs
         indexExit = j
-        puts "j:"
-        puts j
       end
     end  
     indexExit
