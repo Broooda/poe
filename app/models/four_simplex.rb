@@ -140,7 +140,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[9][2]='B'
     calculate_deltas(sympleks_tab)
 
-    return {sympleks_tab: sympleks_tab}
+    return {sympleks_tab: sympleks_tab, numerator: numerator, denominator: denominator}
   end
 
   def self.calculate_deltas(sympleks_tab)
@@ -202,6 +202,7 @@ class FourSimplex < ActiveRecord::Base
           index = i
         end
       end
+    raise OptymalneException if index == nil
     index
   end
 
@@ -246,37 +247,42 @@ class FourSimplex < ActiveRecord::Base
   end
 
 
-  def self.all_in(sympleks_tab)
+  def self.all_in(sympleks_tab, numerator, denominator)
     puts "WLAZLEM"
     step_by_step = []
     (0..10).each do |c|
       puts "c"
       puts c
-      result = transformation_to_one_in_cell(sympleks_tab)
-
-      x = result[:x]
-      y = result[:y]
-      sympleks_tab = result[:sympleks_tab]
-      sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
-      calculate_deltas(sympleks_tab)
-
-      step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
-      if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
-        {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
+      begin
+        result = transformation_to_one_in_cell(sympleks_tab)
+      rescue OptymalneException
         (0..10).each do |j|
           change_numerator_denominator(sympleks_tab, numerator, denominator)
+          calculate_deltas(sympleks_tab)
+          begin
           result = transformation_to_one_in_cell(sympleks_tab)
-
           x = result[:x]
           y = result[:y]
           sympleks_tab = result[:sympleks_tab]
           sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
           calculate_deltas(sympleks_tab)
 
-          step_by_step[c+j+1] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
+          step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone])
+
           return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+          rescue OptymalneException
+            puts ".."
+          end          
         end
-        {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
+        x = result[:x]
+        y = result[:y]
+        sympleks_tab = result[:sympleks_tab]
+        sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
+        
+        calculate_deltas(sympleks_tab)
+
+        step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
+
       end
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
@@ -285,8 +291,8 @@ class FourSimplex < ActiveRecord::Base
 
   def self.change_numerator_denominator(sympleks_tab, numerator, denominator)
     (0..10).each do |c|
-      sympleks_tab[0][c] = numerator[0][c]
-      sympleks_tab[1][c] = denominator[1][c]
+      sympleks_tab[0][c] = numerator[c]
+      sympleks_tab[1][c] = denominator[c]
     end
   end
 
