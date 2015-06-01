@@ -52,9 +52,9 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[0][5] = 0.0
     sympleks_tab[0][6] = 0.0
     sympleks_tab[0][7] = 0.0
-    sympleks_tab[0][8] = 0.0
+    sympleks_tab[0][8] = -1.0 # U NAS 0.0, dla ywkladu -1.0
     sympleks_tab[0][9] = 0.0
-    sympleks_tab[0][10] = -1.0
+    sympleks_tab[0][10] = 0.0#-1.0  # U NAS TRZEBA ZAMIENIC 
 
     sympleks_tab[1][0] = ''
     sympleks_tab[1][1] = ''
@@ -92,9 +92,9 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[3][9]=0.0
     sympleks_tab[3][10] = 0.0
 
-    sympleks_tab[4][0]=0.0
+    sympleks_tab[4][0]= -1.0
     sympleks_tab[4][1]=0.0
-    sympleks_tab[4][2]='p4'
+    sympleks_tab[4][2]='p5'
     sympleks_tab[4][3]=params[:bx3].to_f
     sympleks_tab[4][4]=params[:bx1].to_f
     sympleks_tab[4][5]=params[:bx2].to_f
@@ -131,54 +131,49 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[7][0]=''
     sympleks_tab[7][1]='delta'
     sympleks_tab[7][2]='L'
-    calculate_l(sympleks_tab)
 
     sympleks_tab[8][0]=''
     sympleks_tab[8][1]='delta'
     sympleks_tab[8][2]='M'
-    calculate_m(sympleks_tab)
 
     sympleks_tab[9][0]=''
     sympleks_tab[9][1]='delta'
     sympleks_tab[9][2]='B'
-    calculate_b(sympleks_tab)
+    calculate_deltas(sympleks_tab)
 
     return {sympleks_tab: sympleks_tab}
   end
 
-  def self.calculate_l(sympleks_tab)
-    (3..10).each do |i|
-      sympleks_tab[7][i] = 0.0
-      (3..6).each do |j|
-        sympleks_tab[7][i] += sympleks_tab[j][i]*sympleks_tab[j][1]
-      end
+  def self.calculate_deltas(sympleks_tab)
+    (3..10).each do |c|
+      sympleks_tab[7][c] = 0.0
+      sympleks_tab[8][c] = 0.0 
+      sympleks_tab[9][c] = 0.0
+    end
 
+    (3..10).each do |i|
+      (3..6).each do |j|
+        sympleks_tab[7][i] += sympleks_tab[j][0] * sympleks_tab[j][i]
+        sympleks_tab[8][i] += sympleks_tab[j][1] * sympleks_tab[j][i]
+      end
       if i == 3
         sympleks_tab[7][i] += sympleks_tab[0][i]
-      elsif 
-        sympleks_tab[7][i] -= sympleks_tab[0][i]
-      end
-    end
-  end
-
-  def self.calculate_m(sympleks_tab)
-    (3..10).each do |i|
-      sympleks_tab[8][i] = 0.0
-      (3..6).each do |j|
-        sympleks_tab[8][i] += sympleks_tab[j][i]*sympleks_tab[j][1]
-      end
-      if i == 3
         sympleks_tab[8][i] += sympleks_tab[1][i]
-      elsif    
+      else
+        sympleks_tab[7][i] -= sympleks_tab[0][i]
         sympleks_tab[8][i] -= sympleks_tab[1][i]
       end
     end
-  end
-
-  def self.calculate_b(sympleks_tab)
-    sympleks_tab[9][3] = sympleks_tab[7][3]/sympleks_tab[8][3]
-    (4..10).each do |i|
-      sympleks_tab[9][i]=sympleks_tab[7][3]*sympleks_tab[8][i]-(sympleks_tab[8][3]*sympleks_tab[7][i])
+    (3..6).each do |i|
+      if i == 3
+        puts "-----------3---------"
+        puts sympleks_tab[9][i].to_s+" = "+sympleks_tab[7][i].to_s+" / "+sympleks_tab[8][i].to_s
+        sympleks_tab[9][i] = sympleks_tab[7][i] / sympleks_tab[8][i]
+      else
+        puts "-------------------"
+        puts sympleks_tab[9][i].to_s+" = "+sympleks_tab[7][3].to_s+" * "+sympleks_tab[8][i].to_s+" - ("+sympleks_tab[8][3].to_s+" * "+sympleks_tab[7][i].to_s+")"
+        sympleks_tab[9][i] = sympleks_tab[7][3] * sympleks_tab[8][i] - (sympleks_tab[8][3] * sympleks_tab[7][i])
+      end
     end
   end
 
@@ -227,7 +222,7 @@ class FourSimplex < ActiveRecord::Base
   end
 
   def self.transformation_other_to_zero(sympleks_tab, x, y)
-    (3..10).each do |i|
+    (3..9).each do |i|
       multiplier=(sympleks_tab[i][x])*(-1)
      (3..10).each do |j|
         sympleks_tab[i][j]=sympleks_tab[i][j]+(sympleks_tab[y][j]*multiplier) if i!=y
@@ -243,40 +238,50 @@ class FourSimplex < ActiveRecord::Base
     true
   end
 
+  def self.check_if_feasible(sympleks_tab)
+    (4..10).each do |i|
+      return true if sympleks_tab[8][i]>0
+      return true if sympleks_tab[7][i]>0
+    end
+    false
+  end
+
 
   def self.all_in(sympleks_tab)
-
+    puts "WLAZLEM"
     step_by_step = []
     (0..10).each do |c|
+      puts "c"
+      puts c
       result = transformation_to_one_in_cell(sympleks_tab)
 
       x = result[:x]
       y = result[:y]
       sympleks_tab = result[:sympleks_tab]
       sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
-      calculate_b(sympleks_tab)
+      calculate_deltas(sympleks_tab)
 
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
-      if check_if_optimum(sympleks_tab)
+      if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
         {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
         (0..10).each do |j|
+          change_numerator_denominator(sympleks_tab, numerator, denominator)
           result = transformation_to_one_in_cell(sympleks_tab)
 
           x = result[:x]
           y = result[:y]
           sympleks_tab = result[:sympleks_tab]
           sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
-          calculate_b(sympleks_tab)
+          calculate_deltas(sympleks_tab)
 
           step_by_step[c+j] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
-          return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
+          return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
         end
         {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
       end
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
   end
-end
 
 
   def self.change_numerator_denominator(sympleks_tab, numerator, denominator)
@@ -285,3 +290,5 @@ end
       sympleks_tab[1][c] = denominator[1][c]
     end
   end
+
+end
