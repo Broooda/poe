@@ -240,8 +240,8 @@ class FourSimplex < ActiveRecord::Base
 
   def self.check_if_feasible(sympleks_tab)
     (4..10).each do |i|
-      return true if sympleks_tab[8][i]>0
-      return true if sympleks_tab[7][i]>0
+      return true if sympleks_tab[8][i] > 0.0
+      return true if sympleks_tab[7][i] > 0.0
     end
     false
   end
@@ -274,7 +274,7 @@ class FourSimplex < ActiveRecord::Base
           sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
           calculate_deltas(sympleks_tab)
 
-          step_by_step[c+j] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
+          step_by_step[c+j+1] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
           return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
         end
         {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
