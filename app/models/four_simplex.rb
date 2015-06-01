@@ -7,10 +7,10 @@ class FourSimplex < ActiveRecord::Base
     puts "wyszlo"
     if what == ">="
       puts "-1"
-      return -1
+      return -1.0
     end
     puts "1"
-      return 1
+      return 1.0
   end
 
   def self.uzupelnij(params)
@@ -59,10 +59,10 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[1][0] = ''
     sympleks_tab[1][1] = ''
     sympleks_tab[1][2] = 'mianownik'
-    sympleks_tab[1][3] = 0.0
+    sympleks_tab[1][3] = 1.0
     sympleks_tab[1][4] = 0.0
     sympleks_tab[1][5] = 0.0
-    sympleks_tab[1][6] = 1.0
+    sympleks_tab[1][6] = 0.0
     sympleks_tab[1][7] = 0.0
     sympleks_tab[1][8] = 0.0
     sympleks_tab[1][9] = 0.0
@@ -258,7 +258,7 @@ class FourSimplex < ActiveRecord::Base
 
       step_by_step[c] = [sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]
       if check_if_optimum(sympleks_tab)
-        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
+        {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
         (0..10).each do |j|
           result = transformation_to_one_in_cell(sympleks_tab)
 
