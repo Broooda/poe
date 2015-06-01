@@ -4,7 +4,6 @@ class FourSimplex < ActiveRecord::Base
   def self.symbolToTable(what)
     puts "weszlo"
     puts what
-    puts "wyszlo"
     if what == ">="
       puts "-1"
       return -1.0
