@@ -2,13 +2,9 @@ class FourSimplex < ActiveRecord::Base
 
 
   def self.symbolToTable(what)
-    puts "weszlo"
-    puts what
     if what == ">="
-      puts "-1"
       return -1.0
     end
-    puts "1"
       return 1.0
   end
 
@@ -51,7 +47,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[0][5] = 0.0
     sympleks_tab[0][6] = 0.0
     sympleks_tab[0][7] = 0.0
-    sympleks_tab[0][8] = -1.0 # U NAS 0.0, dla ywkladu -1.0
+    sympleks_tab[0][8] = 0.0#-1.0 # U NAS 0.0, dla ywkladu -1.0
     sympleks_tab[0][9] = 0.0
     sympleks_tab[0][10] = 0.0#-1.0  # U NAS TRZEBA ZAMIENIC 
 
@@ -93,7 +89,7 @@ class FourSimplex < ActiveRecord::Base
 
     sympleks_tab[4][0]= -1.0
     sympleks_tab[4][1]=0.0
-    sympleks_tab[4][2]='p5'
+    sympleks_tab[4][2]='p4'
     sympleks_tab[4][3]=params[:bx3].to_f
     sympleks_tab[4][4]=params[:bx1].to_f
     sympleks_tab[4][5]=params[:bx2].to_f
@@ -165,12 +161,8 @@ class FourSimplex < ActiveRecord::Base
     end
     (3..6).each do |i|
       if i == 3
-        puts "-----------3---------"
-        puts sympleks_tab[9][i].to_s+" = "+sympleks_tab[7][i].to_s+" / "+sympleks_tab[8][i].to_s
         sympleks_tab[9][i] = sympleks_tab[7][i] / sympleks_tab[8][i]
       else
-        puts "-------------------"
-        puts sympleks_tab[9][i].to_s+" = "+sympleks_tab[7][3].to_s+" * "+sympleks_tab[8][i].to_s+" - ("+sympleks_tab[8][3].to_s+" * "+sympleks_tab[7][i].to_s+")"
         sympleks_tab[9][i] = sympleks_tab[7][3] * sympleks_tab[8][i] - (sympleks_tab[8][3] * sympleks_tab[7][i])
       end
     end
@@ -185,8 +177,6 @@ class FourSimplex < ActiveRecord::Base
       if (sympleks_tab[j][3]/sympleks_tab[j][x]).abs < min && (sympleks_tab[j][3]/sympleks_tab[j][x]).abs > 0.0 && sympleks_tab[j][x] > 0.0
         min = (sympleks_tab[j][3]/sympleks_tab[j][x]).abs
         indexExit = j
-        puts "j:"
-        puts j
       end
     end  
     indexExit
@@ -245,44 +235,43 @@ class FourSimplex < ActiveRecord::Base
     end
     false
   end
-
-
-  def self.all_in(sympleks_tab, numerator, denominator)
-    puts "WLAZLEM"
+  
+  def self.first_phase(sympleks_tab)
     step_by_step = []
     (0..10).each do |c|
-      puts "c"
-      puts c
+      # binding.pry
       begin
         result = transformation_to_one_in_cell(sympleks_tab)
-      rescue OptymalneException
-        (0..10).each do |j|
-          change_numerator_denominator(sympleks_tab, numerator, denominator)
-          calculate_deltas(sympleks_tab)
-          begin
-          result = transformation_to_one_in_cell(sympleks_tab)
-          x = result[:x]
-          y = result[:y]
-          sympleks_tab = result[:sympleks_tab]
-          sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
-          calculate_deltas(sympleks_tab)
-
-          step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone])
-
-          return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
-          rescue OptymalneException
-            puts ".."
-          end          
-        end
         x = result[:x]
         y = result[:y]
         sympleks_tab = result[:sympleks_tab]
         sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
-        
         calculate_deltas(sympleks_tab)
-
         step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+      rescue OptymalneException
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true}
+      end
+    end
+    {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
+  end
 
+  def self.second_phase(sympleks_tab, numerator, denominator)
+    change_numerator_denominator(sympleks_tab, numerator, denominator)
+        step_by_step = []
+    (0..10).each do |c|
+      # binding.pry
+      begin
+        result = transformation_to_one_in_cell(sympleks_tab)
+        x = result[:x]
+        y = result[:y]
+        sympleks_tab = result[:sympleks_tab]
+        sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
+        calculate_deltas(sympleks_tab)
+        step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+      rescue OptymalneException 
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true}
       end
     end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
@@ -294,6 +283,13 @@ class FourSimplex < ActiveRecord::Base
       sympleks_tab[0][c] = numerator[c]
       sympleks_tab[1][c] = denominator[c]
     end
+    (3..10).each do |i|
+      (3..6).each do |j|
+        if sympleks_tab[2][i] == sympleks_tab[j][2]
+          sympleks_tab[j][0] = sympleks_tab[0][i]
+          sympleks_tab[j][1] = sympleks_tab[1][i]
+        end
+      end
+    end
   end
-
 end

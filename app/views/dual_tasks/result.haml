@@ -2,18 +2,18 @@
 
 %h3
   Wynik:
-  =@step_by_step.last[2][1]
-  \=
-  =@step_by_step.last[2][2]
-  =@step_by_step.last[3][1]
-  \=
   =@step_by_step.last[3][2]
-  =@step_by_step.last[4][1]
   \=
+  =@step_by_step.last[3][1]
   =@step_by_step.last[4][2]
+  \=
+  =@step_by_step.last[4][1]
+  =@step_by_step.last[5][2]
+  \=
+  =@step_by_step.last[5][1]
   %br
   Wartosc funkcji celu = 
-  wtf
+  =@step_by_step.last[9][3]
 
 %br
 %center
@@ -40,6 +40,5 @@
                 =elem
               -else
                 =elem.to_f.round(3)
-    %br
-            
+      %br
   %br
