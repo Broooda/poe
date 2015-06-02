@@ -30,6 +30,7 @@
             
   %br
   Krok po kroku: 
+  %br Pierwsza faza:
   -@step_by_step.each do |step|
     %table{border: 1, width: '90%'}
       -step.each do |row|
@@ -42,3 +43,22 @@
                 =elem.to_f.round(3)
       %br
   %br
+  -if @second_success == true
+    %br Druga faza:
+    -@step_by_step_2phase.each do |step|
+      %table{border: 1, width: '90%'}
+        -step.each do |row|
+          %tr{style: "text-align: center;"}
+            -row.each do |elem|
+              %td{style: "width: 100px"}
+                -if elem.to_f.round(2) == 0
+                  =elem
+                -else
+                  =elem.to_f.round(3)
+        %br
+  -else
+    %h2 Cos tu nie gra
+    Pierwsza faza :
+    =@success
+    Druga Faza :
+    =@second_success
