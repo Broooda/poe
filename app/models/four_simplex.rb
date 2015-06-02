@@ -255,7 +255,7 @@ class FourSimplex < ActiveRecord::Base
     calculate_deltas(sympleks_tab)
     step_by_step = []
 
-    (0..10).each do |c|
+    # (0..10).each do |c|
       begin
         result = transformation_to_one_in_cell(sympleks_tab)
         x = result[:x]
@@ -263,12 +263,13 @@ class FourSimplex < ActiveRecord::Base
         sympleks_tab = result[:sympleks_tab]
         sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
         calculate_deltas(sympleks_tab)
+
         step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
         return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
       rescue OptymalneException 
         return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true}
       end
-    end
+    # end
     {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: false}
   end
 
