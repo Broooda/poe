@@ -18,11 +18,15 @@ class DualTasksController < ApplicationController
       result_hash = FourSimplex.first_phase(sympleks_tab)
       sympleks_tab = result_hash[:sympleks_tab]
       @step_by_step = result_hash[:step_by_step]
-      result_hash = FourSimplex.second_phase(@step_by_step.last, numerator, denominator)
-      @step_by_step_2phase = result_hash[:step_by_step]
-      @second_success = result_hash[:success]
+
+      st_phase = [@step_by_step.last[0].clone, @step_by_step.last[1].clone,@step_by_step.last[2].clone,@step_by_step.last[3].clone,@step_by_step.last[4].clone,@step_by_step.last[5].clone,@step_by_step.last[6].clone,@step_by_step.last[7].clone,@step_by_step.last[8].clone,@step_by_step.last[9].clone]
+
+      result_hash_2 = FourSimplex.second_phase(st_phase, numerator, denominator)
+
+      @step_by_step_2phase = result_hash_2[:step_by_step]
+      @second_success = result_hash_2[:success]
+
       rescue StandardError => e
-        binding.pry
         @success = false
     end
     @success = result_hash[:success]

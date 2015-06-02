@@ -184,7 +184,7 @@ class FourSimplex < ActiveRecord::Base
 
   #index_of_max_delta_b_greater_than_zero   patrzymy na POZIOM
   def self.find_enter_criteria(sympleks_tab)
-     max = 0.0
+     max = -89
      index = nil
      (4..10).each do |i|
         if sympleks_tab[9][i] > max
@@ -222,18 +222,12 @@ class FourSimplex < ActiveRecord::Base
   end
 
   def self.check_if_optimum(sympleks_tab)
-    (4..10).each do |j|
-      return false if sympleks_tab[9][j] > 0.0
+    (4..10).each do |i|
+      return false if sympleks_tab[9][i] > 0.0
+      return false if sympleks_tab[8][i] > 0.0
+      return false if sympleks_tab[7][i] > 0.0
     end
     true
-  end
-
-  def self.check_if_feasible(sympleks_tab)
-    (4..10).each do |i|
-      return true if sympleks_tab[8][i] > 0.0
-      return true if sympleks_tab[7][i] > 0.0
-    end
-    false
   end
   
   def self.first_phase(sympleks_tab)
@@ -247,8 +241,8 @@ class FourSimplex < ActiveRecord::Base
         sympleks_tab = result[:sympleks_tab]
         sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
         calculate_deltas(sympleks_tab)
-        step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
-        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+        step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone])
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
       rescue OptymalneException
         return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true}
       end
@@ -258,9 +252,10 @@ class FourSimplex < ActiveRecord::Base
 
   def self.second_phase(sympleks_tab, numerator, denominator)
     change_numerator_denominator(sympleks_tab, numerator, denominator)
-        step_by_step = []
+    calculate_deltas(sympleks_tab)
+    step_by_step = []
+
     (0..10).each do |c|
-      # binding.pry
       begin
         result = transformation_to_one_in_cell(sympleks_tab)
         x = result[:x]
@@ -269,7 +264,7 @@ class FourSimplex < ActiveRecord::Base
         sympleks_tab = transformation_other_to_zero(sympleks_tab, x,y)
         calculate_deltas(sympleks_tab)
         step_by_step.push([sympleks_tab[0].clone,sympleks_tab[1].clone,sympleks_tab[2].clone,sympleks_tab[3].clone,sympleks_tab[4].clone,sympleks_tab[5].clone,sympleks_tab[6].clone,sympleks_tab[7].clone,sympleks_tab[8].clone,sympleks_tab[9].clone]) 
-        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab) && check_if_feasible(sympleks_tab)
+        return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true} if check_if_optimum(sympleks_tab)
       rescue OptymalneException 
         return {sympleks_tab: sympleks_tab, step_by_step: step_by_step, success: true}
       end
