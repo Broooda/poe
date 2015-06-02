@@ -1,7 +1,7 @@
 =render 'dual_calc'
 
 %h3
-  Wynik II faza:
+  Wynik I faza:
   =@step_by_step.last[3][2]
   \=
   =@step_by_step.last[3][3]
@@ -17,6 +17,24 @@
   %br
   Wartosc funkcji celu = 
   =@step_by_step.last[9][3]
+  %br
+  %br
+  Wynik II faza:
+  =@step_by_step_2phase.last[3][2]
+  \=
+  =@step_by_step_2phase.last[3][3]
+  =@step_by_step_2phase.last[4][2]
+  \=
+  =@step_by_step_2phase.last[4][3]
+  =@step_by_step_2phase.last[5][2]
+  \=
+  =@step_by_step_2phase.last[5][3]
+  =@step_by_step_2phase.last[6][2]
+  \=
+  =@step_by_step_2phase.last[6][3]
+  %br
+  Wartosc funkcji celu = 
+  =@step_by_step_2phase.last[9][3]
 
 %br
 %center
