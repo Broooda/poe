@@ -27,6 +27,7 @@ class DualTasksController < ApplicationController
       @second_success = result_hash_2[:success]
 
       rescue StandardError => e
+        binding.pry
         @success = false
     end
     @success = result_hash[:success]
