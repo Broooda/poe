@@ -20,6 +20,7 @@ class DualTasksController < ApplicationController
       @step_by_step = result_hash[:step_by_step]
       result_hash = FourSimplex.second_phase(@step_by_step.last, numerator, denominator)
       @step_by_step_2phase = result_hash[:step_by_step]
+      @second_success = result_hash[:success]
       rescue StandardError => e
         binding.pry
         @success = false
