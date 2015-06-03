@@ -111,7 +111,7 @@ class FourSimplex < ActiveRecord::Base
     sympleks_tab[5][9]=0.0
     #sympleks_tab[5][10] = 0.0
 
-    sympleks_tab[6][0]=0.0
+    sympleks_tab[6][0]=-1.0
     sympleks_tab[6][1]=0.0
     sympleks_tab[6][2]='p9'
     sympleks_tab[6][3]=params[:dx3].to_f
