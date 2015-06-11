@@ -88,12 +88,13 @@ class Fifth
 					end
 				end
 			end
-		puts "-------------------------------------"
-		puts "#{@matrix[0].inspect} | #{@supply[0]}"
-		puts "#{@matrix[1].inspect} | #{@supply[0]}"
-		puts "#{@matrix[2].inspect} | #{@supply[0]}"
-		puts "#{@demand.inspect}"
-		puts "-------------------------------------"
+		puts "############################################"
+		puts "#{@matrix[0][0]} \t #{@matrix[0][1]} \t #{@matrix[0][2]} \t #{@matrix[0][3]} \t | #{@supply[0]}"
+		puts "#{@matrix[1][0]} \t #{@matrix[1][1]} \t #{@matrix[1][2]} \t #{@matrix[1][3]} \t | #{@supply[1]}"
+		puts "#{@matrix[2][0]} \t #{@matrix[2][1]} \t #{@matrix[2][2]} \t #{@matrix[2][3]} \t | #{@supply[2]}"
+		puts "- \t - \t - \t -"
+		puts "#{@demand[0]} \t #{@demand[1]} \t #{@demand[2]} \t #{@demand[3]}"
+		puts "############################################"
 		end 
 		@score=score
 	end
