@@ -3,10 +3,7 @@ class FifthController < ApplicationController
 
   def calculation
     @transport = Fifth.new(params)
-    @transport.calculate
-    #obliczenia
-    #oblicznenia
-
+    @transport.calculate!
     render :result
   end
 

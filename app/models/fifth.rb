@@ -1,4 +1,5 @@
 class Fifth
+	attr_accessor :matrix, :demand, :supply
 
 	def initialize(params)
 		@cost = [[Cost.new(params[:c1]), Cost.new(params[:c2]), Cost.new(params[:c3]), Cost.new(params[:c4])],
@@ -6,7 +7,7 @@ class Fifth
 						[Cost.new(params[:c9]), Cost.new(params[:c10]), Cost.new(params[:c11]), Cost.new(params[:c12])]]
 		@supply = [params[:s1].to_i, params[:s2].to_i, params[:s3].to_i]
 		@demand = [params[:d1].to_i, params[:d2].to_i, params[:d3].to_i, params[:d4].to_i]
-		@matrix = [[], [], []]
+		@matrix = [[0,0,0,0], [0,0,0,0], [0,0,0,0]]
 	end
 
 	def findMinCost
@@ -53,7 +54,7 @@ class Fifth
 		return sum
 	end
 
-	def calculate
+	def calculate!
 		until conditionEnd
 			x = findMinCost
 			r = x[0]
@@ -87,9 +88,13 @@ class Fifth
 					end
 				end
 			end
+		puts "-------------------------------------"
+		puts "#{@matrix[0].inspect} | #{@supply[0]}"
+		puts "#{@matrix[1].inspect} | #{@supply[0]}"
+		puts "#{@matrix[2].inspect} | #{@supply[0]}"
+		puts "#{@demand.inspect}"
+		puts "-------------------------------------"
 		end 
 		@score=score
-		return @matrix
 	end
-
 end
