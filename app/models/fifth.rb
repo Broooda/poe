@@ -4,13 +4,13 @@ class Fifth
 		@cost = [[Cost.new(params[:c1]), Cost.new(params[:c2]), Cost.new(params[:c3]), Cost.new(params[:c4])],
 						[Cost.new(params[:c5]), Cost.new(params[:c6]), Cost.new(params[:c7]), Cost.new(params[:c8])],
 						[Cost.new(params[:c9]), Cost.new(params[:c10]), Cost.new(params[:c11]), Cost.new(params[:c12])]]
-		@supply = [params[:s1], params[:s2], params[:s3]]
-		@demand = [params[:d1], params[:d2], params[:d3], params[:d4]]
+		@supply = [params[:s1].to_i, params[:s2].to_i, params[:s3].to_i]
+		@demand = [params[:d1].to_i, params[:d2].to_i, params[:d3].to_i, params[:d4].to_i]
 		@matrix = [[], []]
 	end
 
 	def findMinCost
-		min = 50;
+		min = 50
 		retR = 0
 		retC = 0
 		(0..2).each do |r|

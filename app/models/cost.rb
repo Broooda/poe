@@ -2,7 +2,7 @@ class Cost
 	attr_accessor :cost, :convert
 
 	def initialize(cost)
-		@cost = cost
+		@cost = cost.to_i
 		@convert = true
 	end
 
