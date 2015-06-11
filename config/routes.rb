@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  root 'dual_tasks#data'
-  get '/data' => 'dual_tasks#data'
-  post '/calculation' => 'dual_tasks#calculation'
-  get '/result' => 'dual_tasks#result'
+  root 'fifth#data'
+  get '/data' => 'fifth#data'
+  post '/calculation' => 'fifth#calculation'
+  get '/result' => 'fifth#result'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -1,0 +1,40 @@
+.container-fluid
+  %center
+    Zadanie piąte 
+  %hr
+  %center
+    =form_tag(calculation_path, method: :post) do
+      .row
+        =number_field_tag :c1, params[:c1], step: '1', value: 3
+        =number_field_tag :c2, params[:c2], step: '1', value: 4
+        =number_field_tag :c3, params[:c3], step: '1', value: 7
+        =number_field_tag :c4, params[:c4], step: '1', value: 1
+        |
+        =number_field_tag :s1, params[:s1], step: '1', value: 100
+      .row
+      %br
+        =number_field_tag :c5, params[:c5], step: '1', value: 5
+        =number_field_tag :c6, params[:c6], step: '1', value: 1
+        =number_field_tag :c7, params[:c7], step: '1', value: 3
+        =number_field_tag :c8, params[:c8], step: '1', value: 2
+        |
+        =number_field_tag :s2, params[:s2], step: '1', value: 150
+      .row
+      %br
+        =number_field_tag :c9, params[:c9], step: '1', value: 2
+        =number_field_tag :c10, params[:c10], step: '1', value: 4
+        =number_field_tag :c11, params[:c11], step: '1', value: 5
+        =number_field_tag :c12, params[:c12], step: '1', value: 4
+        |
+        =number_field_tag :s3, params[:s2], step: '1', value: 100
+      .row
+      %br
+        =number_field_tag :d1, params[:d1], step: '1', value: 80
+        =number_field_tag :d2, params[:d2], step: '1', value: 120
+        =number_field_tag :d3, params[:d3], step: '1', value: 120
+        =number_field_tag :d4, params[:d4], step: '1', value: 30
+        |
+        =number_field_tag :d5, params[:d5], disabled: true
+
+      %br
+        =button_tag 'Dalej', class: "btn btn-primary"

@@ -1,9 +1,13 @@
 class Cost
 	attr_accessor :cost, :convert
 
-	initialize(cost)
+	def initialize(cost)
 		@cost = cost
 		@convert = true
 	end
+
+  def inspect
+    @cost
+  end
 
 end
