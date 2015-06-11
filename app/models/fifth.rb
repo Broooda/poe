@@ -9,73 +9,74 @@ class Fifth
 		@matrix = [[], []]
 	end
 
-	def findMinCost(cost)
+	def findMinCost
 		min = 50;
 		retR = 0
 		retC = 0
 		(0..2).each do |r|
 			(0..3).each do |c|
-				if cost[r][c] < min && cost[r][c].convert == true
-					min = cost[r][c]
+				if @cost[r][c].cost < min && @cost[r][c].convert == true
+					min = @cost[r][c].cost
 					retC = c
 					retR = r
 				end
 			end
 		end
-		cost[retR][retC].convert = false
+		@cost[retR][retC].convert = false
 		return retR,retC
 	end
 
-	def conditionEnd(supply, demand)
+	def conditionEnd
 		(0..2).each do |supp|
-			if supply[supp] == 0
-				suppCon = true
+			if @supply[supp] == 0
+				@suppCon = true
 			end
 		end
 		(0..3).each do |dem|
-			if demand[dem] == 0
-				demandCon = true
+			if @demand[dem] == 0
+				@demandCon = true
 			end
 		end
-		return true if demandCon == true && suppCon == true
+		return true if @demandCon == true && @suppCon == true
 		false
 	end
 
 
-	def calculate(matrix, supply, demand, cost)
-		unless conditionEnd
-			x = findMinCost(cost)
+	def calculate
+		until conditionEnd
+			x = findMinCost
 			r = x[0]
 			c = x[1]
 
 			#check row or column min 
-			if demand[c] < supply[r]
-				matrix[r][c] = demand[c]
+			if @demand[c] < @supply[r]
+				@matrix[r][c] = @demand[c]
 			else 
-				matrix[r][c] = supply[r]
+				@matrix[r][c] = @supply[r]
 			end
 
 			#reduce demand and supply of value
-			demand[c] -= matrix[r][c]
-			supply[r] -= matrix[r][c]
+			@demand[c] -= @matrix[r][c]
+			@supply[r] -= @matrix[r][c]
 
 			#complete rest column/row to zero if supply/demand equal to zero
-			if demnad[c] == 0
-				0..2.each do |ir|
-					if cost[ir][c].convert == true
-						matrix[ir][c] = 0
-						cost[ir][c].convert = false
+			if @demnad[c] == 0
+				(0..2).each do |ir|
+					if @cost[ir][c].convert == true
+						@matrix[ir][c] = 0
+						@cost[ir][c].convert = false
 					end
 				end
 			end
-			if supply[c] == 0
+			if @supply[c] == 0
 				(0..3).each do |ic|
-					if cost[r][ic].convert == true
-						matrix[r][ic] = 0
-						cost[r][ic].convert = false
+					if @cost[r][ic].convert == true
+						@matrix[r][ic] = 0
+						@cost[r][ic].convert = false
 					end
 				end
 			end
 		end
+		binding.pry
 	end
 end
