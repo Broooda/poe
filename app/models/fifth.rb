@@ -6,7 +6,7 @@ class Fifth
 						[Cost.new(params[:c9]), Cost.new(params[:c10]), Cost.new(params[:c11]), Cost.new(params[:c12])]]
 		@supply = [params[:s1].to_i, params[:s2].to_i, params[:s3].to_i]
 		@demand = [params[:d1].to_i, params[:d2].to_i, params[:d3].to_i, params[:d4].to_i]
-		@matrix = [[], []]
+		@matrix = [[], [], []]
 	end
 
 	def findMinCost
@@ -60,7 +60,7 @@ class Fifth
 			@supply[r] -= @matrix[r][c]
 
 			#complete rest column/row to zero if supply/demand equal to zero
-			if @demnad[c] == 0
+			if @demand[c] == 0
 				(0..2).each do |ir|
 					if @cost[ir][c].convert == true
 						@matrix[ir][c] = 0
