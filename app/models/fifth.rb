@@ -27,20 +27,31 @@ class Fifth
 	end
 
 	def conditionEnd
+		@suppCon = true
+		@demandCon = true
 		(0..2).each do |supp|
-			if @supply[supp] == 0
-				@suppCon = true
+			if @supply[supp] != 0
+				@suppCon = false
 			end
 		end
 		(0..3).each do |dem|
-			if @demand[dem] == 0
-				@demandCon = true
+			if @demand[dem] != 0
+				@demandCon = false
 			end
 		end
 		return true if @demandCon == true && @suppCon == true
 		false
 	end
 
+	def score
+		sum = 0
+		(0..2).each do |ir|
+			(0..3).each do |ic|
+				sum += @matrix[ir][ic] * @cost[ir][ic].cost
+			end
+		end
+		return sum
+	end
 
 	def calculate
 		until conditionEnd
@@ -76,7 +87,9 @@ class Fifth
 					end
 				end
 			end
-		end
-		binding.pry
+		end 
+		@score=score
+		return @matrix
 	end
+
 end
